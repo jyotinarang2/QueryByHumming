@@ -35,7 +35,9 @@ def midi_to_numbers(input_array):
     midi_relative_numbers = [0]
     #import pdb;pdb.set_trace()
     for i in range(1,len(input_array)):
-        if(input_array[i]>input_array[i-1]):
+        if(input_array[i]==0):
+            midi_relative_numbers.append(input_array[i])
+        elif(input_array[i]>input_array[i-1]):
             if(abs(input_array[i]-input_array[i-1])>1):
                 sequence = midi_relative_numbers[i-1] + 1
                 midi_relative_numbers.append(sequence)
@@ -51,22 +53,38 @@ def midi_to_numbers(input_array):
             midi_relative_numbers.append(midi_relative_numbers[i-1])
     return midi_relative_numbers
 
+#Remove silence frames as well as negative numbers from the frames
+def remove_silence(input_array):
+    query_sequence = []
+    for i in range(0,len(input_array)):
+        if(input_array[i]!=0):
+            query_sequence.append(input_array[i])
+    return query_sequence
 
 
 
-#This function will convert the input 
-#def convert_segments(input_array)
 
 if __name__ == '__main__':
+    #Process the audio file
     file_audio = r'q7_freq.xlsx'
     pre_processed_data = pre_process(file_audio)
     midi_values_audio = convert_to_midi(pre_processed_data)
+    midi_relative_audio = midi_to_numbers(midi_values_audio)
+    audio_without_silence = remove_silence(midi_relative_audio)
+
+    #Process the query file
     file_query = r'q7_query.xlsx'
     pre_processed_query = pre_process(file_query)
     midi_values_query = convert_to_midi(pre_processed_query)
-    midi_relative_numbers = midi_to_numbers(midi_values_query)
+    midi_relative_query = midi_to_numbers(midi_values_query)
+    query_without_silence = remove_silence(midi_relative_query)
     print(midi_values_query)
-    print(midi_relative_numbers)
-
+    print(midi_relative_query)
+    print('Midi removing silence')
+    print(query_without_silence)
+    print('audio without silence')
+    print(audio_without_silence)
+    #print('main audio file')
+    #print(midi_relative_audio)
 
 
