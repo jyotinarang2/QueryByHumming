@@ -1,13 +1,14 @@
 
 from pandas import DataFrame, read_csv
 import matplotlib.pyplot as plt
+import rlcs as rlcs
 import pandas as pd
 import numpy as np
 import math
 
 print('Import successful')
 
-'''This function will '''
+'''This function will remove -ve values and convert them to 0's'''
 def pre_process(file):
     data = pd.read_excel(file)
     annotation = data['Annotation']
@@ -39,13 +40,15 @@ def midi_to_numbers(input_array):
             midi_relative_numbers.append(input_array[i])
         elif(input_array[i]>input_array[i-1]):
             if(abs(input_array[i]-input_array[i-1])>1):
-                sequence = midi_relative_numbers[i-1] + 1
+                value = int(abs(input_array[i]-input_array[i-1]))
+                sequence = midi_relative_numbers[i-1] + value
                 midi_relative_numbers.append(sequence)
             else:
                 midi_relative_numbers.append(midi_relative_numbers[i-1])
         elif(input_array[i]<input_array[i-1]):
             if(abs(input_array[i]-input_array[i-1])>1):
-                sequence = midi_relative_numbers[i-1]-1
+                value = int(abs(input_array[i]-input_array[i-1]))
+                sequence = midi_relative_numbers[i-1]-value
                 midi_relative_numbers.append(sequence)
             else:
                 midi_relative_numbers.append(midi_relative_numbers[i-1])
@@ -61,7 +64,15 @@ def remove_silence(input_array):
             query_sequence.append(input_array[i])
     return query_sequence
 
+#def segment_audio(input_array):
+#    segment_to_pattern = {}
+    
+''' This module is not intended to run from interpreter.
+        Instead, call the functions from your main script.
+        from lcs import rlcs as rlcs
 
+        score, diag, cost = rlcs.rlcs(X, Y, tau_dist,  delta)
+        segment = rlcs.backtrack(X, Y, score, diag, cost)'''
 
 
 if __name__ == '__main__':
@@ -86,5 +97,8 @@ if __name__ == '__main__':
     print(audio_without_silence)
     #print('main audio file')
     #print(midi_relative_audio)
-
+    np_query = np.asarray(midi_relative_query)
+    np_audio = np.asarray(midi_relative_audio)
+    score, diag, cost = rlcs.rlcs(np_query, np_audio)
+    segment = rlcs.backtrack(np_query, np_audio, score, diag, cost)
 
