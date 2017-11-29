@@ -98,48 +98,17 @@ def process_file(file_name):
 if __name__ == '__main__':
     #Process the audio file
     file_audio = r'q7_freq.xlsx'
-    # #pre_processed_data = pre_process(file_audio)
-    # #midi_values_audio = convert_to_midi(pre_processed_data)
-    # #midi_relative_audio = midi_to_numbers(midi_values_audio)
-    # #audio_without_silence = remove_silence(midi_relative_audio)
 
     # #Process the query file
     file_query = r'q7_query.xlsx'
-    # pre_processed_query = pre_process(file_query)
-    # numpy_array = np.asarray(pre_processed_query)
-    # midi_values_query = convert_to_midi(numpy_array)
-    # query_without_silence = remove_silence(midi_values_query)
-    # #import pdb;pdb.set_trace()
-    # downsampled = downsample_audio(query_without_silence,10)
-    # midi_relative_query = midi_to_numbers(downsampled)
-    # np.set_printoptions(threshold=np.nan)
-    # print(midi_relative_query)
-    # query_sequence = np.round(midi_relative_query)
-    # print(query_sequence)
-    # non_repeated = get_continuous_numbers(query_sequence)
-    # print(non_repeated)
+    file = r'query_q1.csv'
     audio_data = process_file(file_audio)
     query_data = process_file(file_query)
+    check = pre_process(file)
     np.set_printoptions(threshold=np.nan)
     print(audio_data)
     print(query_data)
 
-
-    #print(midi_values_query)
-    #print(midi_relative_query)
-    #print('Midi removing silence')
-    #print(query_without_silence)
-    #print('audio without silence')
-    #print(audio_without_silence)
-    #print('main audio file')
-    #print(midi_relative_audio)
-    #print(query_without_silence)
-    #plt.plot(query_without_silence)
-    #plt.show()
-
-
-    #np_query = np.asarray(midi_relative_query)
-    #np_audio = np.asarray(midi_relative_audio)
     score, diag, cost = rlcs.rlcs(query_data, audio_data)
     segment = rlcs.backtrack(query_data, audio_data, score, diag, cost)
     print(segment)
